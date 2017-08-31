@@ -31,8 +31,6 @@ class LocaleRetriever(context: Context, locale: Locale = Locale.getDefault(), pr
         }
 
         throw GoogleApiFetchException(response.code())
-
-        return "A"
     }
 
     private fun parseGoogleMapsSearch(googleMapSearch: GoogleMapSearch) : String? {
