@@ -1,5 +1,8 @@
 package br.com.esapiens.geocoder_library.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,23 +12,18 @@ import java.util.List;
 public class GoogleMapSearch {
     private static final String OK_STATUS = "OK";
 
-    private List<GoogleAddressResult> results;
+    @JsonProperty("results")
+    private List<GoogleAddressResult> results = new ArrayList<>();
+
+    @JsonProperty("status")
     private String status;
 
     public List<GoogleAddressResult> getResults() {
         return results;
     }
 
-    public void setResults(List<GoogleAddressResult> results) {
-        this.results = results;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public boolean isOK() {

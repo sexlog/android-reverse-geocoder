@@ -8,10 +8,12 @@ import android.widget.Toast;
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
 
+import java.util.Locale;
+
 import br.com.esapiens.geocoder_library.LocaleRetriever;
-import br.com.esapiens.geocoder_library.LocationRetrievalMethod;
 import br.com.esapiens.geocoder_library.PromiseLocaleRetriever;
 import br.com.esapiens.geocoder_library.SimpleLocation;
+import br.com.esapiens.geocoder_library.parsers.CityNameParser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView textView = (TextView)findViewById(R.id.textView);
 
-        SimpleLocation simpleLocation = new SimpleLocation(-15, -49.058695);
+        SimpleLocation simpleLocation = new SimpleLocation(65.54027, 116.433105);
 
-        LocaleRetriever localeRetriever = new LocaleRetriever(this);
+        LocaleRetriever localeRetriever = new LocaleRetriever(this, Locale.getDefault(), new CityNameParser(false));
         PromiseLocaleRetriever promiseLocaleRetriever = new PromiseLocaleRetriever(localeRetriever);
 
-        promiseLocaleRetriever.find(LocationRetrievalMethod.GoogleWebservice, simpleLocation)
+        promiseLocaleRetriever.findWithGoogleApi(simpleLocation)
                 .done(new DoneCallback<String>() {
                     @Override
                     public void onDone(String result) {

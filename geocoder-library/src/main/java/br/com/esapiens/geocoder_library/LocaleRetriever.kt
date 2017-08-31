@@ -3,6 +3,7 @@ package br.com.esapiens.geocoder_library
 import android.content.Context
 import android.location.Geocoder
 import br.com.esapiens.geocoder_library.entities.GoogleMapSearch
+import br.com.esapiens.geocoder_library.parsers.DefaultAddressParser
 import java.util.*
 
 /**
@@ -18,7 +19,7 @@ class LocaleRetriever(context: Context, locale: Locale = Locale.getDefault(), pr
     fun findWithGoogleApi(location: SimpleLocation): String {
         val latitudeAndLongitude = "${location.latitude},${location.longitude}"
 
-        val response = mapsApi.getLocation(latitudeAndLongitude).execute()
+        val response = RetrofitSynchronousCallFix.execute(mapsApi, latitudeAndLongitude)
         val body = response?.body()
         if (response!!.isSuccessful && body != null) {
             val formattedAddress = parseGoogleMapsSearch(body)
@@ -30,14 +31,14 @@ class LocaleRetriever(context: Context, locale: Locale = Locale.getDefault(), pr
         }
 
         throw GoogleApiFetchException(response.code())
+
+        return "A"
     }
 
     private fun parseGoogleMapsSearch(googleMapSearch: GoogleMapSearch) : String? {
         if (googleMapSearch.isOK) {
             val results = googleMapSearch.results
-            if (results.size > 0) {
-                return results[0].formattedAdress
-            }
+            return addressParser.parseFromGoogleApi(results)
         }
 
         return null
@@ -50,7 +51,7 @@ class LocaleRetriever(context: Context, locale: Locale = Locale.getDefault(), pr
 
         val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
         if (addresses.size > 0) {
-            val parsedAddress = addressParser.parse(addresses[0])
+            val parsedAddress = addressParser.parseFromCoreApi(addresses[0])
             return parsedAddress
         }
 
